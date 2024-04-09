@@ -10,9 +10,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.3.4",
     "@mdx-js/loader": "^3.0.1",
     "@mdx-js/react": "^3.0.1",
     "@next/mdx": "^14.1.4",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-slot": "^1.0.2",
     "@types/mdx": "^2.0.12",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
@@ -21,9 +24,11 @@
     "pdf-lib": "^1.17.1",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.51.2",
     "remark-gfm": "^3.0.1",
     "tailwind-merge": "^2.2.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.12",

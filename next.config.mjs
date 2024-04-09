@@ -1,5 +1,7 @@
 import nextMDX from "@next/mdx";
 import remarkGfm from "remark-gfm";
+const SUB_DIRECTORY = "/webpdf-studio";
+const isProd = process.env.NODE_ENV == "production";
 
 const withMDX = nextMDX({
   extensions: /\.mdx?$/,
@@ -17,6 +19,11 @@ const withMDX = nextMDX({
 const nextConfig = {
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
   output: "export",
+  basePath: isProd ? SUB_DIRECTORY : "",
+  assetPrefix: isProd ? SUB_DIRECTORY : "",
+  publicRuntimeConfig: {
+    basePath: isProd ? SUB_DIRECTORY : "",
+  },
 };
 
 export default withMDX(nextConfig);
