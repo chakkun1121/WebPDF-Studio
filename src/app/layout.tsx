@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s | WebPDF Studio | chakkun1121",
   },
   description: "Webブラウザ上でPDFを編集する無料アプリです",
-  metadataBase: new URL("https://chakkun1121.github.io/webpdf-studio/"),
+  metadataBase: new URL("https://chakkun1121.github.io/WebPDF-Studio/"),
   alternates: {
     canonical: "/",
   },

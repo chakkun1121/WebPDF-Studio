@@ -1,6 +1,6 @@
 import nextMDX from "@next/mdx";
 import remarkGfm from "remark-gfm";
-const SUB_DIRECTORY = "/webpdf-studio";
+const SUB_DIRECTORY = "/WebPDF-Studio";
 const isProd = process.env.NODE_ENV == "production";
 
 const withMDX = nextMDX({
