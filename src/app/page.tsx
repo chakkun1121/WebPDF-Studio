@@ -8,8 +8,12 @@ export default function Home() {
         <h2>ツール一覧</h2>
         <ul>
           <li>
+            <Link href="image-to-pdf">画像をPDFに変換</Link>  
+          </li>
+          <li>
             <Link href="/edit-metadata">PDFのメタデータの表示、編集、削除</Link>
           </li>
+
         </ul>
       </section>
       <article className="prose lg:prose-xl mx-auto">
