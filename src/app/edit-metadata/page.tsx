@@ -14,6 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { PDFDocument } from "pdf-lib";
+import { toast } from "sonner";
+import { download, openFiles } from "@/lib/pdf/file";
 
 const formSchema = z.object({
   Title: z.string().optional(),
@@ -27,47 +29,51 @@ const formSchema = z.object({
 });
 export default function Page() {
   const [pdf, setPdf] = useState<File | undefined>(undefined);
-  function selectFile() {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "application/pdf";
-    input.onchange = e => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (file && file.type === "application/pdf") {
-        console.log(file);
-        setPdf(file);
-        const reader = new FileReader();
-        reader.onload = async e => {
-          const arrayBuffer = reader.result as ArrayBuffer;
-          const pdfDoc = await PDFDocument.load(new Uint8Array(arrayBuffer), {
-            updateMetadata: false,
-          });
-          console.log(pdfDoc);
-          form.setValue("Title", pdfDoc.getTitle());
-          form.setValue("Author", pdfDoc.getAuthor());
-          form.setValue("Subject", pdfDoc.getSubject());
-          form.setValue("Keywords", pdfDoc.getKeywords());
-          form.setValue("Creator", pdfDoc.getCreator());
-          form.setValue("Producer", pdfDoc.getProducer());
-          form.setValue("CreationDate", pdfDoc.getCreationDate()?.toString());
-          form.setValue("ModDate", pdfDoc.getModificationDate()?.toString());
-        };
-        reader.readAsArrayBuffer(file);
+  const [loading, setLoading] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  async function selectFile() {
+    setLoading(true);
+    try {
+      const [file] = await openFiles();
+      if (!file || file.type != "application/pdf") {
+        throw new Error("PDFファイルを選択してください。");
       }
-    };
-    input.click();
+      setPdf(file);
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(file);
+      await new Promise(resolve => (reader.onloadend = resolve));
+      const arrayBuffer = reader.result as ArrayBuffer;
+      const pdfDoc = await PDFDocument.load(new Uint8Array(arrayBuffer), {
+        updateMetadata: false,
+      });
+      console.log(pdfDoc);
+      form.setValue("Title", pdfDoc.getTitle());
+      form.setValue("Author", pdfDoc.getAuthor());
+      form.setValue("Subject", pdfDoc.getSubject());
+      form.setValue("Keywords", pdfDoc.getKeywords());
+      form.setValue("Creator", pdfDoc.getCreator());
+      form.setValue("Producer", pdfDoc.getProducer());
+      form.setValue("CreationDate", pdfDoc.getCreationDate()?.toString());
+      form.setValue("ModDate", pdfDoc.getModificationDate()?.toString());
+    } catch (e) {
+      console.error(e);
+      toast.error("エラーが発生しました");
+    } finally {
+      setLoading(false);
+    }
   }
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    disabled: !pdf,
+    disabled: !pdf || loading || processing,
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     console.log(values);
     if (!pdf) return;
-    const reader = new FileReader();
-    reader.onload = async e => {
+    try {
+      setProcessing(true);
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(pdf);
+      await new Promise(resolve => (reader.onload = resolve));
       const pdfDoc = await PDFDocument.load(
         new Uint8Array(reader.result as ArrayBuffer)
       );
@@ -85,16 +91,13 @@ export default function Page() {
       );
       const pdfBytes = await pdfDoc.save();
       const blob = new Blob([pdfBytes], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
-      // download
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = pdf.name;
-      a.click();
-      URL.revokeObjectURL(url);
-      a.remove();
-    };
-    reader.readAsArrayBuffer(pdf);
+      download(blob, pdf.name);
+    } catch (e) {
+      console.error(e);
+      toast.error("エラーが発生しました");
+    } finally {
+      setProcessing(false);
+    }
   }
 
   return (
@@ -135,9 +138,10 @@ export default function Page() {
                 )}
               />
             ))}
-            <Button type="submit" disabled={!pdf}>
+            <Button type="submit" disabled={!pdf || loading || processing}>
               保存
             </Button>
+            {processing && <p>処理中...</p>}
           </form>
         </Form>
       </section>

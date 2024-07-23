@@ -1,65 +1,53 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { download, openFiles } from "@/lib/pdf/file";
 import { PDFDocument } from "pdf-lib";
 import { useState } from "react";
 
 export default function Page() {
   const [converting, setConverting] = useState(false);
   async function convertImageToPDF() {
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = "image/png, image/jpeg";
-    fileInput.multiple = true;
-    fileInput.onchange = async e => {
-      const files = (e.target as HTMLInputElement).files;
-      setConverting(true);
-      if (!files) return;
-      await Promise.all(
-        Array.from(files).map(async file => {
-          const reader = new FileReader();
-          reader.readAsArrayBuffer(file);
-          await new Promise(resolve => {
-            reader.onload = resolve;
-          });
-          const pdfDoc = await PDFDocument.create();
-          pdfDoc.setTitle(file.name);
-          pdfDoc.setProducer(
-            "WebPDF Studio(https://chakkun1121.github.io/WebPDF-Studio/)"
-          );
-          pdfDoc.setCreator(
-            "WebPDF Studio(https://chakkun1121.github.io/WebPDF-Studio/)"
-          );
-          const image = await (async () => {
-            if (file.type === "image/png") {
-              return await pdfDoc.embedPng(reader.result as ArrayBuffer);
-            }
-            if (file.type === "image/jpeg") {
-              return await pdfDoc.embedJpg(reader.result as ArrayBuffer);
-            }
-
-            throw new Error("Unsupported image type");
-          })();
-          const page = pdfDoc.addPage([image.width, image.height]);
-          page.drawImage(image, {
-            x: 0,
-            y: 0,
-            width: image.width,
-            height: image.height,
-          });
-          const pdfBytes = await pdfDoc.save();
-          const pdfBlob = new Blob([pdfBytes], { type: "application/pdf" });
-          const pdfUrl = URL.createObjectURL(pdfBlob);
-          const a = document.createElement("a");
-          a.setAttribute("download", `${file.name}.pdf`);
-          a.setAttribute("href", pdfUrl);
-          a.click();
-          URL.revokeObjectURL(pdfUrl);
-        })
-      );
-      setConverting(false);
-    };
-    fileInput.click();
+    const files = await openFiles("image/png, image/jpeg");
+    setConverting(true);
+    await Promise.all(
+      Array.from(files).map(async file => {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        await new Promise(resolve => {
+          reader.onload = resolve;
+        });
+        const pdfDoc = await PDFDocument.create();
+        pdfDoc.setTitle(file.name);
+        pdfDoc.setProducer(
+          "WebPDF Studio(https://chakkun1121.github.io/WebPDF-Studio/)"
+        );
+        pdfDoc.setCreator(
+          "WebPDF Studio(https://chakkun1121.github.io/WebPDF-Studio/)"
+        );
+        const image = await (async () => {
+          if (file.type === "image/png") {
+            return await pdfDoc.embedPng(reader.result as ArrayBuffer);
+          }
+          if (file.type === "image/jpeg") {
+            return await pdfDoc.embedJpg(reader.result as ArrayBuffer);
+          }
+          throw new Error("Unsupported image type");
+        })();
+        const page = pdfDoc.addPage([image.width, image.height]);
+        page.drawImage(image, {
+          x: 0,
+          y: 0,
+          width: image.width,
+          height: image.height,
+        });
+        const pdfBytes = await pdfDoc.save();
+        const pdfBlob = new Blob([pdfBytes], { type: "application/pdf" });
+        download(pdfBlob, file.name + ".pdf");
+      })
+    );
+    setConverting(false);
   }
   return (
     <>
