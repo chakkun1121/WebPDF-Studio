@@ -104,7 +104,9 @@ export default function Page() {
     <>
       <article className="prose lg:prose-xl mx-auto">
         <h2>PDFのメタデータの表示、編集、削除</h2>
-        <p>PDF内にあるメタデータの表示、編集、削除ができます。</p>
+        <p>
+          PDF内にあるメタデータの表示、編集、削除ができます。他のアプリでは困難なPDF作成アプリの抹消も対応しています。
+        </p>
       </article>
       <section>
         <nav>

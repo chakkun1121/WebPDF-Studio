@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="ja">
       <body>
         <Header />
-        <main className="max-w-7xl mx-auto p-2">{children}</main>
+        <main className="max-w-2xl mx-auto p-2">{children}</main>
         <Toaster />
       </body>
     </html>
