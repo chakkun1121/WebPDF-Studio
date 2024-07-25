@@ -8,12 +8,14 @@ export default function Home() {
         <h2>ツール一覧</h2>
         <ul>
           <li>
-            <Link href="image-to-pdf">画像をPDFに変換</Link>  
+            <Link href="image-to-pdf">画像をPDFに変換</Link>
           </li>
           <li>
             <Link href="/edit-metadata">PDFのメタデータの表示、編集、削除</Link>
           </li>
-
+          <li>
+            <Link href="/merge">PDFファイルの結合</Link>
+          </li>
         </ul>
       </section>
       <article className="prose lg:prose-xl mx-auto">
@@ -25,8 +27,7 @@ export default function Home() {
           ファイルの処理をローカルで実行するためサーバー必要なく、サーバー代がかからないため無料で提供できます。また、ファイルはローカルで処理をするので外部に一切アップロードしていません。また、プライバシーのため、
           <a
             href="https://search.google.com/search-console/about"
-            target="_blank"
-          >
+            target="_blank">
             google search console
           </a>
           での検索流入数以外のデータは取得していません。
