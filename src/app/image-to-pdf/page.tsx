@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function Page() {
   const [converting, setConverting] = useState(false);
   async function convertImageToPDF() {
-    const files = await openFiles("image/png, image/jpeg");
+    const files = await openFiles("image/png, image/jpeg",true);
     setConverting(true);
     await Promise.all(
       Array.from(files).map(async file => {
