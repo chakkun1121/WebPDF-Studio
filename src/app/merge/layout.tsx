@@ -5,9 +5,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export const metadata: Metadata = {
-  title: "画像ファイルをPDFに変換",
-  description: "画像ファイルをPDFに変換します。完全にローカルで作動します。",
+  title: "PDFファイルを結合",
+  description: "複数のPDFファイルを結合します。完全にローカルで作動します。",
   alternates: {
-    canonical: "/image-to-pdf",
+    canonical: "/merge",
   },
 };

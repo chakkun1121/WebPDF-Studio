@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 export const metadata: Metadata = {
   title: "PDFのメタデータの表示、編集、削除",
   description:
-    "PDFのメタデータを表示、編集、削除するWebアプリケーションです。Producerも編集、削除できます。",
+    "          PDF内にあるメタデータの表示、編集、削除ができます。他のアプリでは困難なPDF作成アプリの抹消も対応しています。",
   alternates: {
     canonical: "/edit-metadata",
   },
