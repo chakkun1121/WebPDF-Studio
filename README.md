@@ -1,5 +1,8 @@
 # WebPDF Studio
 
+[LocalPDF](https://localpdf.online/app)という上位互換アプリが出たので開発を終了します。
+Development will be discontinued as a compatible app called [LocalPDF](https://localpdf.online/app) has been released.
+
 This is a free web application for editing PDFs in a web browser.
 
 このアプリは web ブラウザで PDF を編集する無料アプリです。
